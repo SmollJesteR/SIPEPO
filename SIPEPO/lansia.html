@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lansia - SIPEPO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="bg-green-500 text-white py-6 shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="flex items-center">
+                    <i data-feather="arrow-left" class="mr-2"></i>
+                    <span class="font-semibold">Kembali</span>
+                </a>
+                <h1 class="text-2xl font-bold">Pendataan Lansia</h1>
+                <div class="w-8"></div> <!-- Spacer for balance -->
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl shadow-md p-6 max-w-4xl mx-auto" data-aos="fade-up">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">Formulir Pendataan Lansia</h2>
+            
+            <form>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <label class="block text-gray-700 mb-2">Nama Lengkap</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Umur</label>
+                        <input type="number" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Tekanan Darah</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="120/80">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Kolesterol</label>
+                        <input type="number" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="mg/dL">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Alamat</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Kontak Keluarga</label>
+                        <input type="tel" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    </div>
+                </div>
+                
+                <div class="mb-8">
+                    <label class="block text-gray-700 mb-2">Kondisi Kesehatan</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded text-green-500">
+                            <span class="ml-2">Hipertensi</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded text-green-500">
+                            <span class="ml-2">Diabetes</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded text-green-500">
+                            <span class="ml-2">Asam Urat</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded text-green-500">
+                            <span class="ml-2">Kolesterol Tinggi</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg">
+                        Simpan Data
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="py-6 text-center text-gray-500 text-sm">
+        © 2025 SIPEPO - Sistem Pendataan Posyandu Desa Hajimena
+    </footer>
+
+    <script>
+        AOS.init();
+        feather.replace();
+    </script>
+</body>
+</html>

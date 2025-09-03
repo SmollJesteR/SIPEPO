@@ -1,0 +1,38 @@
+/* Custom SIPEPO Styles */
+
+.card-custom {
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
+}
+.card-custom:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+}
+
+.accent-underline {
+    border-bottom: 3px solid #10b981;
+    display: inline-block;
+    padding-bottom: 2px;
+}
+
+.section-bg {
+    background: linear-gradient(135deg, #f0fdfa 0%, #d1fae5 100%);
+}
+
+.heading-strong {
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.avatar {
+    border-radius: 9999px;
+    border: 2px solid #10b981;
+    padding: 2px;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px #6ee7b7;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}

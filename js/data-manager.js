@@ -1,7 +1,7 @@
 // Data storage keys
 const STORAGE_KEYS = {
     BALITA: 'sipepo_balita_data',
-    PRALANSIA: 'sipepo_pralansia_data',
+    IBU_HAMIL: 'sipepo_ibu_hamil_data',
     LANSIA: 'sipepo_lansia_data'
 };
 
@@ -37,3 +37,21 @@ function exportToExcel(formType) {
     const fileName = `${formType}_${new Date().toISOString().split('T')[0]}.xlsx`;
     XLSX.writeFile(wb, fileName);
 }
+
+// When initializing, migrate any pra-lansia data to lansia if it exists
+(function migratePraLansiaData() {
+    const praLansiaData = JSON.parse(localStorage.getItem('sipepo_pralansia_data') || '[]');
+    if (praLansiaData.length > 0) {
+        const lansiaData = getFormData(STORAGE_KEYS.LANSIA);
+        // Add all pra-lansia data to lansia data
+        for (const data of praLansiaData) {
+            // Mark it as migrated from pra-lansia
+            data.migratedFromPralansia = true;
+            lansiaData.push(data);
+        }
+        // Save the combined data
+        localStorage.setItem(STORAGE_KEYS.LANSIA, JSON.stringify(lansiaData));
+        // Clear the old pra-lansia data
+        localStorage.removeItem('sipepo_pralansia_data');
+    }
+})();

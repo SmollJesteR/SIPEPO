@@ -6,14 +6,17 @@
     <title>SIPEPO - Sistem Pendataan Posyandu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="js/data-manager.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap');
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Quicksand', 'Poppins', sans-serif;
             background-color: #f8fafc;
         }
         .btn-hover:hover {
@@ -23,73 +26,1391 @@
         .btn-hover {
             transition: all 0.3s ease;
         }
+        .page {
+            display: none;
+        }
+        .active-page {
+            display: block;
+        }
+        .sipepo-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
-    <main class="flex-grow container mx-auto px-4 py-12">
-        <div class="text-center mb-12">
-            <h1 class="text-5xl md:text-6xl font-bold text-gray-800 mb-4">SIPEPO</h1>
-            <h2 class="text-xl md:text-2xl text-gray-600">Sistem Pendataan Posyandu</h2>
-        </div>
+    <!-- Home Page -->
+    <div id="home-page" class="page active-page">
+        <main class="flex-grow container mx-auto px-4 py-12">
+            <div class="text-center mb-12">
+                <h1 class="text-5xl md:text-6xl font-bold mb-4 animate__animated animate__fadeInDown sipepo-title" style="color: #f784c5;">SIPEPO</h1>
+                <h2 class="text-sm md:text-lg text-gray-600 animate__animated animate__fadeIn animate__delay-1s">Sistem Pendataan Posyandu Hajimena</h2>
+            </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            <!-- Balita Button -->
-            <a href="balita.html" 
-               class="btn-hover bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl p-8 text-center shadow-md hover:shadow-lg"
-               data-aos="fade-up" data-aos-delay="100">
-                <div class="bg-emerald-500 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-                    <i data-feather="smile" class="text-white w-8 h-8"></i>
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto bento-mobile-grid">
+                <!-- Pendataan Button -->
+                <a href="#" onclick="showPage('pendataan-page'); return false;" 
+                   class="btn-hover bg-gradient-to-br from-pink-200 to-pink-100 rounded-xl p-8 text-center shadow-md hover:shadow-lg"
+                   data-aos="fade-up" data-aos-delay="100">
+                    <div class="bg-pink-500 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background-color: #f784c5;">
+                        <i data-feather="clipboard" class="text-white w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Pendataan</h3>
+                    <p class="text-gray-600">Pendataan balita, ibu hamil & lansia</p>
+                </a>
+
+                <!-- History Button -->
+                <a href="#" onclick="showPage('history-page'); return false;" 
+                   class="btn-hover bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl p-8 text-center shadow-md hover:shadow-lg"
+                   data-aos="fade-up" data-aos-delay="200">
+                    <div class="bg-blue-500 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <i data-feather="clock" class="text-white w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">History</h3>
+                    <p class="text-gray-600">Riwayat pendataan posyandu</p>
+                </a>
+
+                <!-- Statistik Button (replacing Lansia) -->
+                <a href="#" onclick="showPage('statistik-page'); return false;" 
+                   class="btn-hover bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl p-8 text-center shadow-md hover:shadow-lg"
+                   data-aos="fade-up" data-aos-delay="300">
+                    <div class="bg-green-500 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <i data-feather="bar-chart-2" class="text-white w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Statistik</h3>
+                    <p class="text-gray-600">Visualisasi data kesehatan</p>
+                </a>
+
+                <!-- Sipepo Button -->
+                <a href="#" onclick="showPage('sipepo-page'); return false;" 
+                   class="btn-hover bg-gradient-to-br from-pink-200 to-pink-100 rounded-xl p-8 text-center shadow-md hover:shadow-lg"
+                   data-aos="fade-up" data-aos-delay="400">
+                    <div class="bg-pink-500 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background-color: #f784c5;">
+                        <i data-feather="home" class="text-white w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">SIPEPO</h3>
+                    <p class="text-gray-600">Informasi tentang SIPEPO</p>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Pendataan Page -->
+    <div id="pendataan-page" class="page">
+        <header class="bg-emerald-500 text-white py-6 shadow-md">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center">
+                    <a href="#" onclick="showPage('home-page'); return false;" class="flex items-center back-button">
+                        <i data-feather="arrow-left" class="mr-2"></i>
+                        <span class="font-semibold back-text">Kembali</span>
+                    </a>
+                    <h1 class="text-2xl font-bold">Pendataan <span class="sipepo-title" style="color: #f784c5;">SIPEPO</span></h1>
+                    <div class="w-8"></div> <!-- Spacer for balance -->
                 </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Balita</h3>
-                <p class="text-gray-600">Pendataan kesehatan balita</p>
-            </a>
+            </div>
+        </header>
 
-            <!-- Pra-Lansia Button -->
-            <a href="pralansia.html" 
-               class="btn-hover bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl p-8 text-center shadow-md hover:shadow-lg"
-               data-aos="fade-up" data-aos-delay="200">
-                <div class="bg-blue-500 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-                    <i data-feather="users" class="text-white w-8 h-8"></i>
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <div class="bg-white rounded-xl shadow-md p-6 max-w-5xl mx-auto" data-aos="fade-up">
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Pilih Kategori Pendataan</h2>
+                    
+                    <div class="mb-6">
+        <div class="flex flex-wrap mb-4">
+                            <button onclick="showPendataanTab('balita', event)" class="tab-btn bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg mr-2 mb-2 hover:bg-emerald-200 active-tab">
+                                Balita
+                            </button>
+                            <button onclick="showPendataanTab('ibu-hamil', event)" class="tab-btn bg-pink-100 text-pink-700 px-4 py-2 rounded-lg mr-2 mb-2 hover:bg-pink-200">
+                                Ibu Hamil
+                            </button>
+                            <button onclick="showPendataanTab('lansia', event)" class="tab-btn bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg mr-2 mb-2 hover:bg-yellow-200">
+                                Lansia
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Balita Form Tab -->
+                    <div id="balita-form" class="pendataan-tab">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Formulir Pendataan Balita</h3>
+                        <form id="balitaForm" onsubmit="handleBalitaSubmit(event)">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Nama Balita</label>
+                                    <input type="text" name="namaLengkap" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Tanggal Lahir</label>
+                                    <input type="date" name="tanggalLahir" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Lingkar Kepala (cm)</label>
+                                    <input type="number" name="lingkarKepala" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Berat Badan (kg)</label>
+                                    <input type="number" name="beratBadan" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Tinggi Badan (cm)</label>
+                                    <input type="number" name="tinggiBadan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                </div>
+                            </div>
+                            
+                            <!-- Immunization Section -->
+                            <div class="mb-6">
+                                <label class="block text-gray-700 mb-2">Imunisasi</label>
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Hepatitis B (<24 Jam)" class="rounded text-emerald-500 mr-2">
+                                            <span>Hepatitis B (&lt;24 Jam)</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="BCG" class="rounded text-emerald-500 mr-2">
+                                            <span>BCG</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Polio Tetes 1" class="rounded text-emerald-500 mr-2">
+                                            <span>Polio Tetes 1</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="DPT-HB-Hib 1" class="rounded text-emerald-500 mr-2">
+                                            <span>DPT-HB-Hib 1</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Polio Tetes 2" class="rounded text-emerald-500 mr-2">
+                                            <span>Polio Tetes 2</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Rota Virus (RV) 1*" class="rounded text-emerald-500 mr-2">
+                                            <span>Rota Virus (RV) 1*</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="PCV 1" class="rounded text-emerald-500 mr-2">
+                                            <span>PCV 1</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="DPT-HB-Hib 2" class="rounded text-emerald-500 mr-2">
+                                            <span>DPT-HB-Hib 2</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Polio Tetes 3" class="rounded text-emerald-500 mr-2">
+                                            <span>Polio Tetes 3</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Rota Virus (RV) 2*" class="rounded text-emerald-500 mr-2">
+                                            <span>Rota Virus (RV) 2*</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="PCV 2" class="rounded text-emerald-500 mr-2">
+                                            <span>PCV 2</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="DPT-HB-Hib 3" class="rounded text-emerald-500 mr-2">
+                                            <span>DPT-HB-Hib 3</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Polio Tetes 4" class="rounded text-emerald-500 mr-2">
+                                            <span>Polio Tetes 4</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Polio Suntik (IPV) 1" class="rounded text-emerald-500 mr-2">
+                                            <span>Polio Suntik (IPV) 1</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Rota Virus (RV) 3*" class="rounded text-emerald-500 mr-2">
+                                            <span>Rota Virus (RV) 3*</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Campak - Rubella (MR)" class="rounded text-emerald-500 mr-2">
+                                            <span>Campak - Rubella (MR)</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Polio Suntik (IPV) 2*" class="rounded text-emerald-500 mr-2">
+                                            <span>Polio Suntik (IPV) 2*</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Japanese Encephalitis (JE)**" class="rounded text-emerald-500 mr-2">
+                                            <span>Japanese Encephalitis (JE)**</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="PCV 3" class="rounded text-emerald-500 mr-2">
+                                            <span>PCV 3</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="DPT-HB-Hib Lanjutan" class="rounded text-emerald-500 mr-2">
+                                            <span>DPT-HB-Hib Lanjutan</span>
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-100 rounded">
+                                            <input type="checkbox" name="imunisasi" value="Campak - Rubella (MR) Lanjutan" class="rounded text-emerald-500 mr-2">
+                                            <span>Campak - Rubella (MR) Lanjutan</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Data Orang Tua Section -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Nama Orang Tua</label>
+                                    <input type="text" name="namaOrangTua" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">No. WA/Telepon</label>
+                                    <input type="tel" name="kontakOrangTua" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <button type="button" onclick="exportToExcel(STORAGE_KEYS.BALITA)" class="bg-[#f784c5] hover:bg-[#f561b0] text-white font-medium py-2 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg flex items-center">
+                                    <i data-feather="download" class="w-4 h-4 mr-2"></i>
+                                    Export Excel
+                                </button>
+                                <button type="submit" class="bg-[#f784c5] hover:bg-[#f561b0] text-white font-medium py-2 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg">
+                                    Simpan Data
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Ibu Hamil Form Tab -->
+                    <div id="ibu-hamil-form" class="pendataan-tab" style="display: none">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Formulir Pendataan Ibu Hamil</h3>
+                        <form id="ibuHamilForm" onsubmit="handleIbuHamilSubmit(event)">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Nama Ibu Hamil</label>
+                                    <input type="text" name="namaLengkap" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Usia Kehamilan (minggu)</label>
+                                    <input type="number" name="usiaKehamilan" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Berat Badan (kg)</label>
+                                    <input type="number" name="beratBadan" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Tinggi Badan (cm)</label>
+                                    <input type="number" name="tinggiBadan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Lingkar Perut (cm)</label>
+                                    <input type="number" name="lingkarPerut" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Lingkar Lengan (cm)</label>
+                                    <input type="number" name="lingkarLengan" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Tekanan Darah</label>
+                                    <input type="text" name="tekananDarah" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500" placeholder="120/80">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">No. WA/Telepon</label>
+                                    <input type="tel" name="nomorWA" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Alamat</label>
+                                    <input type="text" name="alamat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-end items-center gap-4 mt-6">
+                                <button type="button" onclick="exportToExcel(STORAGE_KEYS.IBU_HAMIL)" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg flex items-center">
+                                    <i data-feather="download" class="w-4 h-4 mr-2"></i>
+                                    Export Excel
+                                </button>
+                                <button type="submit" class="bg-[#f784c5] hover:bg-[#f561b0] text-white font-medium py-2 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg">
+                                    Simpan Data
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Lansia Form Tab -->
+                    <div id="lansia-form" class="pendataan-tab" style="display: none">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Formulir Pendataan Lansia</h3>
+                        <form id="lansiaForm" onsubmit="handleLansiaSubmit(event)">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Nama Lengkap</label>
+                                    <input type="text" name="namaLengkap" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Tekanan Darah</label>
+                                    <input type="text" name="tekananDarah" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500" placeholder="120/80">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Tinggi Badan (cm)</label>
+                                    <input type="number" name="tinggiBadan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Berat Badan (kg)</label>
+                                    <input type="number" name="beratBadan" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Alamat</label>
+                                    <input type="text" name="alamat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Nomor WA/Telepon</label>
+                                    <input type="tel" name="nomorWA" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-end items-center gap-4 mt-6">
+                                <button type="button" onclick="exportToExcel(STORAGE_KEYS.LANSIA)" class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg flex items-center">
+                                    <i data-feather="download" class="w-4 h-4 mr-2"></i>
+                                    Export Excel
+                                </button>
+                                <button type="submit" class="bg-[#f784c5] hover:bg-[#f561b0] text-white font-medium py-2 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg">
+                                    Simpan Data
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Pra-Lansia</h3>
-                <p class="text-gray-600">Pendataan kesehatan pra-lansia</p>
-            </a>
+            </div>
+        </main>
+    </div>
 
-            <!-- Lansia Button -->
-            <a href="lansia.html" 
-               class="btn-hover bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl p-8 text-center shadow-md hover:shadow-lg"
-               data-aos="fade-up" data-aos-delay="300">
-                <div class="bg-green-500 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-                    <i data-feather="heart" class="text-white w-8 h-8"></i>
+    <!-- History Page -->
+    <div id="history-page" class="page">
+        <header class="bg-blue-500 text-white py-6 shadow-md">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center">
+                    <a href="#" onclick="showPage('home-page'); return false;" class="flex items-center back-button">
+                        <i data-feather="arrow-left" class="mr-2"></i>
+                        <span class="font-semibold back-text">Kembali</span>
+                    </a>
+                    <h1 class="text-2xl font-bold">Riwayat <span class="sipepo-title" style="color: #f784c5;">SIPEPO</span></h1>
+                    <div class="w-8"></div> <!-- Spacer for balance -->
                 </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Lansia</h3>
-                <p class="text-gray-600">Pendataan kesehatan lansia</p>
-            </a>
+            </div>
+        </header>
 
-            <!-- Sipepo Button -->
-            <a href="sipepo.html" 
-               class="btn-hover bg-gradient-to-br from-teal-100 to-blue-100 rounded-xl p-8 text-center shadow-md hover:shadow-lg"
-               data-aos="fade-up" data-aos-delay="400">
-                <div class="bg-teal-500 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-                    <i data-feather="home" class="text-white w-8 h-8"></i>
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <div class="bg-white rounded-xl shadow-md p-6 max-w-5xl mx-auto" data-aos="fade-up">
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">History Data Posyandu</h2>
+                    
+                    <div class="mb-6">
+                        <div class="flex flex-wrap mb-4">
+                            <button onclick="showHistoryTab('balita', event)" class="tab-btn bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg mr-2 mb-2 hover:bg-emerald-200">
+                                Data Balita
+                            </button>
+                            <button onclick="showHistoryTab('ibu-hamil', event)" class="tab-btn bg-pink-100 text-pink-700 px-4 py-2 rounded-lg mr-2 mb-2 hover:bg-pink-200">
+                                Data Ibu Hamil
+                            </button>
+                            <button onclick="showHistoryTab('lansia', event)" class="tab-btn bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg mr-2 mb-2 hover:bg-yellow-200">
+                                Data Lansia
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Balita History Tab -->
+                    <div id="balita-history" class="history-tab">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Riwayat Data Balita</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white border border-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Lahir</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lingkar Kepala</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Berat (kg)</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tinggi (cm)</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Input</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="balita-history-data">
+                                    <!-- Data will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4">
+                            <button onclick="exportToExcel(STORAGE_KEYS.BALITA)" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg flex items-center">
+                                <i data-feather="download" class="w-4 h-4 mr-2"></i>
+                                Export Excel
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Ibu Hamil History Tab -->
+                    <div id="ibu-hamil-history" class="history-tab" style="display:none">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Riwayat Data Ibu Hamil</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white border border-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usia Kehamilan</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Berat (kg)</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tinggi (cm)</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lingkar Perut (cm)</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lingkar Lengan (cm)</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tekanan Darah</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Input</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ibu-hamil-history-data">
+                                    <!-- Data will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4">
+                            <button onclick="exportToExcel(STORAGE_KEYS.IBU_HAMIL)" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg flex items-center">
+                                <i data-feather="download" class="w-4 h-4 mr-2"></i>
+                                Export Excel
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Lansia History Tab -->
+                    <div id="lansia-history" class="history-tab" style="display:none">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Riwayat Data Lansia</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white border border-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tekanan Darah</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Berat (kg)</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tinggi (cm)</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Input</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lansia-history-data">
+                                    <!-- Data will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4">
+                            <button onclick="exportToExcel(STORAGE_KEYS.LANSIA)" class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg flex items-center">
+                                <i data-feather="download" class="w-4 h-4 mr-2"></i>
+                                Export Excel
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Sipepo</h3>
-                <p class="text-gray-600">Informasi sistem pendataan</p>
-            </a>
-        </div>
-    </main>
+            </div>
+        </main>
+    </div>
 
-    <footer class="py-6 text-center text-gray-500 text-sm">
-        © 2025 SIPEPO - Sistem Pendataan Posyandu Desa Hajimena
+    <!-- Statistik Page (replacing Lansia) -->
+    <div id="statistik-page" class="page">
+        <header class="bg-green-500 text-white py-6 shadow-md">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center">
+                    <a href="#" onclick="showPage('home-page'); return false;" class="flex items-center back-button">
+                        <i data-feather="arrow-left" class="mr-2"></i>
+                        <span class="font-semibold back-text">Kembali</span>
+                    </a>
+                    <h1 class="text-2xl font-bold">Statistik <span class="sipepo-title" style="color: #f784c5;">SIPEPO</span></h1>
+                    <div class="w-8"></div> <!-- Spacer for balance -->
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <div class="bg-white rounded-xl shadow-md p-6 max-w-5xl mx-auto" data-aos="fade-up">
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Visualisasi Data Posyandu</h2>
+                    
+                    <div class="mb-6">
+                        <div class="flex flex-wrap mb-4">
+                            <button onclick="showStatistikTab('balita', event)" class="tab-btn bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg mr-2 mb-2 hover:bg-emerald-200 active-tab">
+                                Statistik Balita
+                            </button>
+                            <button onclick="showStatistikTab('ibu-hamil', event)" class="tab-btn bg-pink-100 text-pink-700 px-4 py-2 rounded-lg mr-2 mb-2 hover:bg-pink-200">
+                                Statistik Ibu Hamil
+                            </button>
+                            <button onclick="showStatistikTab('lansia', event)" class="tab-btn bg-green-100 text-green-700 px-4 py-2 rounded-lg mr-2 mb-2 hover:bg-green-200">
+                                Statistik Lansia
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Balita Statistik Tab -->
+                    <div id="balita-statistik" class="statistik-tab">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Statistik Data Balita</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <h4 class="font-medium text-gray-700 mb-3">Jumlah Balita per Bulan</h4>
+                                <div class="aspect-w-16 aspect-h-9 bg-white p-4">
+                                    <canvas id="balitaChart" width="400" height="300"></canvas>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <h4 class="font-medium text-gray-700 mb-3">Status Imunisasi</h4>
+                                <div class="aspect-w-16 aspect-h-9 bg-white p-4">
+                                    <canvas id="imunisasiChart" width="400" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
+                            <h4 class="font-medium text-gray-700 mb-3">Tren Berat dan Tinggi Badan</h4>
+                            <div class="aspect-w-21 aspect-h-9 bg-white p-4">
+                                <canvas id="pertumbuhanBalitaChart" width="600" height="300"></canvas>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-2">
+                            <p>* Data statistik diperbarui secara otomatis saat ada pendataan baru</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Ibu Hamil Statistik Tab -->
+                    <div id="ibu-hamil-statistik" class="statistik-tab" style="display:none">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Statistik Data Ibu Hamil</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <h4 class="font-medium text-gray-700 mb-3">Jumlah Ibu Hamil per Bulan</h4>
+                                <div class="aspect-w-16 aspect-h-9 bg-white p-4">
+                                    <canvas id="ibuHamilChart" width="400" height="300"></canvas>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <h4 class="font-medium text-gray-700 mb-3">Distribusi Usia Kehamilan</h4>
+                                <div class="aspect-w-16 aspect-h-9 bg-white p-4">
+                                    <canvas id="usiaKehamilanChart" width="400" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-2">
+                            <p>* Data statistik diperbarui secara otomatis saat ada pendataan baru</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Lansia Statistik Tab -->
+                    <div id="lansia-statistik" class="statistik-tab" style="display:none">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Statistik Data Lansia</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <h4 class="font-medium text-gray-700 mb-3">Jumlah Lansia per Bulan</h4>
+                                <div class="aspect-w-16 aspect-h-9 bg-white p-4">
+                                    <canvas id="lansiaChart" width="400" height="300"></canvas>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <h4 class="font-medium text-gray-700 mb-3">Distribusi Tekanan Darah</h4>
+                                <div class="aspect-w-16 aspect-h-9 bg-white p-4">
+                                    <canvas id="tekananDarahChart" width="400" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-2">
+                            <p>* Data statistik diperbarui secara otomatis saat ada pendataan baru</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Sipepo/About Page -->
+    <div id="sipepo-page" class="page">
+        <header class="bg-teal-500 text-white py-6 shadow-md">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center">
+                    <a href="#" onclick="showPage('home-page'); return false;" class="flex items-center back-button">
+                        <i data-feather="arrow-left" class="mr-2"></i>
+                        <span class="font-semibold back-text">Kembali</span>
+                    </a>
+                    <h1 class="text-2xl font-bold">Tentang <span class="sipepo-title" style="color: #f784c5;">SIPEPO</span></h1>
+                    <div class="w-8"></div> <!-- Spacer for balance -->
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8" data-aos="fade-up">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Apa itu SIPEPO?</h2>
+                    <p class="text-gray-600 mb-4">
+                        SIPEPO (Sistem Pendataan Posyandu) adalah platform digital yang dirancang untuk memudahkan pendataan dan pemantauan kesehatan masyarakat di Posyandu Desa Hajimena.
+                    </p>
+                    <p class="text-gray-600">
+                        Sistem ini membantu petugas posyandu dalam mencatat, menyimpan, dan menganalisis data kesehatan balita, pra-lansia, dan lansia secara lebih efisien dan terintegrasi.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow-md p-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-teal-100 p-3 rounded-full mr-4">
+                                <i data-feather="target" class="text-teal-500"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-800">Tujuan</h3>
+                        </div>
+                        <ul class="text-gray-600 space-y-2">
+                            <li class="flex items-start">
+                                <i data-feather="check" class="text-teal-500 mr-2 mt-1 w-4 h-4"></i>
+                                <span>Mempermudah pendataan kesehatan masyarakat</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i data-feather="check" class="text-teal-500 mr-2 mt-1 w-4 h-4"></i>
+                                <span>Meningkatkan akurasi data kesehatan</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i data-feather="check" class="text-teal-500 mr-2 mt-1 w-4 h-4"></i>
+                                <span>Memantau perkembangan kesehatan secara berkala</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-md p-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-teal-100 p-3 rounded-full mr-4">
+                                <i data-feather="users" class="text-teal-500"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-800">Manfaat</h3>
+                        </div>
+                        <ul class="text-gray-600 space-y-2">
+                            <li class="flex items-start">
+                                <i data-feather="check" class="text-teal-500 mr-2 mt-1 w-4 h-4"></i>
+                                <span>Data kesehatan tersimpan dengan aman</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i data-feather="check" class="text-teal-500 mr-2 mt-1 w-4 h-4"></i>
+                                <span>Laporan kesehatan dapat diakses dengan mudah</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i data-feather="check" class="text-teal-500 mr-2 mt-1 w-4 h-4"></i>
+                                <span>Mempercepat proses pelayanan di posyandu</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6" data-aos="fade-up">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Kontak Kami</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-medium text-gray-700 mb-2 flex items-center">
+                                <i data-feather="map-pin" class="mr-2 text-teal-500 w-5 h-5"></i>
+                                Alamat
+                            </h3>
+                            <p class="text-gray-600">Posyandu Desa Hajimena, Kecamatan Natar, Kabupaten Lampung Selatan</p>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-700 mb-2 flex items-center">
+                                <i data-feather="phone" class="mr-2 text-teal-500 w-5 h-5"></i>
+                                Telepon
+                            </h3>
+                            <p class="text-gray-600">(0721) 1234567</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="py-6 text-center text-white text-sm mobile-style-footer" style="border-radius: 20px 20px 0 0;">
+        © 2025 <span class="sipepo-title" style="color: white;">SIPEPO</span> - Sistem Pendataan Posyandu 
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // Initialize AOS and Feather Icons
         AOS.init({
             duration: 800,
             easing: 'ease-in-out',
             once: true
         });
         feather.replace();
+
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            document.getElementById(pageId).classList.add('active-page');
+            
+            // If showing history page, load the data
+            if (pageId === 'history-page') {
+                loadHistoryData();
+                showHistoryTab('balita', event);
+            } else if (pageId === 'pendataan-page') {
+                showPendataanTab('balita', event);
+            } else if (pageId === 'statistik-page') {
+                showStatistikTab('balita', event);
+                loadAllCharts();
+            }
+            
+            // Reinitialize feather icons after page change
+            feather.replace();
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Pendataan page tab functionality
+        function showPendataanTab(tabName, e) {
+            // Hide all tabs
+            document.querySelectorAll('.pendataan-tab').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Show the selected tab
+            document.getElementById(tabName + '-form').style.display = 'block';
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'bg-emerald-200', 'bg-pink-200', 'bg-green-200');
+            });
+            
+            // Set active tab style based on tab name
+            if (e && e.target) {
+                if (tabName === 'balita') {
+                    e.target.classList.add('bg-emerald-200', 'text-emerald-800', 'active-tab');
+                } else if (tabName === 'ibu-hamil') {
+                    e.target.classList.add('bg-pink-200', 'text-pink-800', 'active-tab');
+                } else if (tabName === 'lansia') {
+                    e.target.classList.add('bg-green-200', 'text-green-800', 'active-tab');
+                }
+            }
+        }
+
+        // Statistik page tab functionality
+        function showStatistikTab(tabName, e) {
+            // Hide all tabs
+            document.querySelectorAll('.statistik-tab').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Show the selected tab
+            document.getElementById(tabName + '-statistik').style.display = 'block';
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'bg-emerald-200', 'bg-pink-200', 'bg-green-200');
+            });
+            
+            // Set active tab style based on tab name
+            if (e && e.target) {
+                if (tabName === 'balita') {
+                    e.target.classList.add('bg-emerald-200', 'text-emerald-800', 'active-tab');
+                } else if (tabName === 'ibu-hamil') {
+                    e.target.classList.add('bg-pink-200', 'text-pink-800', 'active-tab');
+                } else if (tabName === 'lansia') {
+                    e.target.classList.add('bg-green-200', 'text-green-800', 'active-tab');
+                }
+            }
+        }
+
+        // Handle form submissions
+        function handleBalitaSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = {};
+            
+            // Handle multiple checkbox values for imunisasi
+            const imunisasiValues = [];
+            document.querySelectorAll('input[name="imunisasi"]:checked').forEach(checkbox => {
+                imunisasiValues.push(checkbox.value);
+            });
+            
+            formData.forEach((value, key) => {
+                if (key !== 'imunisasi') {
+                    data[key] = value;
+                }
+            });
+            
+            // Add the array of immunizations
+            data.imunisasi = imunisasiValues;
+            data.timestamp = new Date().getTime();
+            
+            saveFormData(STORAGE_KEYS.BALITA, data);
+            alert('Data balita berhasil disimpan!');
+            form.reset();
+            
+            // Update statistics if on that page
+            if (document.getElementById('statistik-page').classList.contains('active-page')) {
+                loadAllCharts();
+            }
+        }
+
+        function handleIbuHamilSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = {};
+            
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            
+            data.timestamp = new Date().getTime();
+            
+            saveFormData(STORAGE_KEYS.IBU_HAMIL, data);
+            alert('Data ibu hamil berhasil disimpan!');
+            form.reset();
+            
+            // Update statistics if on that page
+            if (document.getElementById('statistik-page').classList.contains('active-page')) {
+                loadAllCharts();
+            }
+        }
+
+        function handleLansiaSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = {};
+            
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            
+            data.timestamp = new Date().getTime();
+            
+            saveFormData(STORAGE_KEYS.LANSIA, data);
+            alert('Data lansia berhasil disimpan!');
+            form.reset();
+            
+            // Update statistics if on that page
+            if (document.getElementById('statistik-page').classList.contains('active-page')) {
+                loadAllCharts();
+            }
+        }
+
+        // History page functionality
+        function showHistoryTab(tabName, e) {
+            // Hide all tabs
+            document.querySelectorAll('.history-tab').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Show the selected tab
+            document.getElementById(tabName + '-history').style.display = 'block';
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'bg-emerald-200', 'bg-pink-200', 'bg-green-200');
+            });
+            
+            // Set active tab style based on tab name
+            if (e && e.target) {
+                if (tabName === 'balita') {
+                    e.target.classList.add('bg-emerald-200', 'text-emerald-800', 'active-tab');
+                } else if (tabName === 'ibu-hamil') {
+                    e.target.classList.add('bg-pink-200', 'text-pink-800', 'active-tab');
+                } else if (tabName === 'lansia') {
+                    e.target.classList.add('bg-green-200', 'text-green-800', 'active-tab');
+                }
+            }
+        }
+
+        function loadHistoryData() {
+            // Load and display balita data
+            const balitaData = getFormData(STORAGE_KEYS.BALITA);
+            const balitaTableBody = document.getElementById('balita-history-data');
+            balitaTableBody.innerHTML = '';
+            
+            if (balitaData.length === 0) {
+                balitaTableBody.innerHTML = '<tr><td colspan="6" class="py-4 px-6 text-center text-gray-500">Belum ada data balita</td></tr>';
+            } else {
+                balitaData.forEach(data => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="py-2 px-4 border-b border-gray-200">${data.namaLengkap || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.tanggalLahir || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.lingkarKepala || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.beratBadan || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.tinggiBadan || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${new Date(data.timestamp).toLocaleString() || '-'}</td>
+                    `;
+                    balitaTableBody.appendChild(row);
+                });
+            }
+            
+            // Load and display ibu hamil data
+            const ibuHamilData = getFormData(STORAGE_KEYS.IBU_HAMIL);
+            const ibuHamilTableBody = document.getElementById('ibu-hamil-history-data');
+            ibuHamilTableBody.innerHTML = '';
+            
+            if (ibuHamilData.length === 0) {
+                ibuHamilTableBody.innerHTML = '<tr><td colspan="6" class="py-4 px-6 text-center text-gray-500">Belum ada data ibu hamil</td></tr>';
+            } else {
+                ibuHamilData.forEach(data => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="py-2 px-4 border-b border-gray-200">${data.namaLengkap || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.usiaKehamilan || '-'} minggu</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.beratBadan || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.tinggiBadan || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.lingkarPerut || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.lingkarLengan || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.alamat || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${new Date(data.timestamp).toLocaleString() || '-'}</td>
+                    `;
+                    ibuHamilTableBody.appendChild(row);
+                });
+            }
+            
+            // Load and display lansia data
+            const lansiaData = getFormData(STORAGE_KEYS.LANSIA);
+            const lansiaTableBody = document.getElementById('lansia-history-data');
+            lansiaTableBody.innerHTML = '';
+            
+            if (lansiaData.length === 0) {
+                lansiaTableBody.innerHTML = '<tr><td colspan="6" class="py-4 px-6 text-center text-gray-500">Belum ada data lansia</td></tr>';
+            } else {
+                lansiaData.forEach(data => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="py-2 px-4 border-b border-gray-200">${data.namaLengkap || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.tekananDarah || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.beratBadan || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.tinggiBadan || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${data.alamat || '-'}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${new Date(data.timestamp).toLocaleString() || '-'}</td>
+                    `;
+                    lansiaTableBody.appendChild(row);
+                });
+            }
+        }
+
+        // Helper functions for data storage
+        function saveFormData(storageKey, data) {
+            let existingData = getFormData(storageKey);
+            existingData.push(data);
+            localStorage.setItem(storageKey, JSON.stringify(existingData));
+        }
+
+        function getFormData(storageKey) {
+            const data = localStorage.getItem(storageKey);
+            return data ? JSON.parse(data) : [];
+        }
+
+        // Export data to Excel
+        function exportToExcel(storageKey) {
+            const data = getFormData(storageKey);
+            if (data.length === 0) {
+                alert('Tidak ada data untuk di-export!');
+                return;
+            }
+
+            let storageKeyName;
+            switch(storageKey) {
+                case STORAGE_KEYS.BALITA:
+                    storageKeyName = 'Data_Balita';
+                    break;
+                case STORAGE_KEYS.IBU_HAMIL:
+                    storageKeyName = 'Data_Ibu_Hamil';
+                    break;
+                case STORAGE_KEYS.LANSIA:
+                    storageKeyName = 'Data_Lansia';
+                    break;
+                default:
+                    storageKeyName = 'Data_Posyandu';
+            }
+
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, storageKeyName);
+            
+            // Format date for filename
+            const date = new Date();
+            const formattedDate = `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+            
+            XLSX.writeFile(workbook, `${storageKeyName}_${formattedDate}.xlsx`);
+        }
+        
+        // Charts for Statistics Page
+        function loadAllCharts() {
+            // Get data
+            const balitaData = getFormData(STORAGE_KEYS.BALITA);
+            const ibuHamilData = getFormData(STORAGE_KEYS.IBU_HAMIL);
+            const lansiaData = getFormData(STORAGE_KEYS.LANSIA);
+            
+            // Load Balita Charts
+            loadBalitaCharts(balitaData);
+            
+            // Load Ibu Hamil Charts
+            loadIbuHamilCharts(ibuHamilData);
+            
+            // Load Lansia Charts
+            loadLansiaCharts(lansiaData);
+        }
+        
+        function loadBalitaCharts(data) {
+            // Monthly count chart
+            const balitaMonthlyCtx = document.getElementById('balitaChart').getContext('2d');
+            const monthlyData = getMonthlyCount(data);
+            
+            const balitaMonthlyChart = new Chart(balitaMonthlyCtx, {
+                type: 'bar',
+                data: {
+                    labels: monthlyData.labels,
+                    datasets: [{
+                        label: 'Jumlah Balita',
+                        data: monthlyData.data,
+                        backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Imunisasi chart
+            const imunisasiCtx = document.getElementById('imunisasiChart').getContext('2d');
+            const imunisasiData = getImunisasiStats(data);
+            
+            const imunisasiChart = new Chart(imunisasiCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Sudah Imunisasi', 'Belum Imunisasi'],
+                    datasets: [{
+                        data: [imunisasiData.completed, imunisasiData.incomplete],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.6)',
+                            'rgba(239, 68, 68, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(16, 185, 129, 1)',
+                            'rgba(239, 68, 68, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+            
+            // Growth trend chart
+            const pertumbuhanCtx = document.getElementById('pertumbuhanBalitaChart').getContext('2d');
+            const growthData = getGrowthTrend(data);
+            
+            const pertumbuhanChart = new Chart(pertumbuhanCtx, {
+                type: 'line',
+                data: {
+                    labels: growthData.labels,
+                    datasets: [
+                        {
+                            label: 'Berat Badan Rata-rata (kg)',
+                            data: growthData.weight,
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 2,
+                            fill: true
+                        },
+                        {
+                            label: 'Tinggi Badan Rata-rata (cm)',
+                            data: growthData.height,
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        function loadIbuHamilCharts(data) {
+            // Monthly count chart
+            const ibuHamilMonthlyCtx = document.getElementById('ibuHamilChart').getContext('2d');
+            const monthlyData = getMonthlyCount(data);
+            
+            const ibuHamilMonthlyChart = new Chart(ibuHamilMonthlyCtx, {
+                type: 'bar',
+                data: {
+                    labels: monthlyData.labels,
+                    datasets: [{
+                        label: 'Jumlah Ibu Hamil',
+                        data: monthlyData.data,
+                        backgroundColor: 'rgba(236, 72, 153, 0.6)',
+                        borderColor: 'rgba(236, 72, 153, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Usia kehamilan distribution
+            const usiaKehamilanCtx = document.getElementById('usiaKehamilanChart').getContext('2d');
+            const usiaKehamilanData = getUsiaKehamilanDistribution(data);
+            
+            const usiaKehamilanChart = new Chart(usiaKehamilanCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Trimester 1 (0-12 minggu)', 'Trimester 2 (13-27 minggu)', 'Trimester 3 (28+ minggu)'],
+                    datasets: [{
+                        data: [
+                            usiaKehamilanData.trimester1,
+                            usiaKehamilanData.trimester2,
+                            usiaKehamilanData.trimester3
+                        ],
+                        backgroundColor: [
+                            'rgba(236, 72, 153, 0.6)',
+                            'rgba(124, 58, 237, 0.6)',
+                            'rgba(239, 68, 68, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(236, 72, 153, 1)',
+                            'rgba(124, 58, 237, 1)',
+                            'rgba(239, 68, 68, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+        
+        function loadLansiaCharts(data) {
+            // Monthly count chart
+            const lansiaMonthlyCtx = document.getElementById('lansiaChart').getContext('2d');
+            const monthlyData = getMonthlyCount(data);
+            
+            const lansiaMonthlyChart = new Chart(lansiaMonthlyCtx, {
+                type: 'bar',
+                data: {
+                    labels: monthlyData.labels,
+                    datasets: [{
+                        label: 'Jumlah Lansia',
+                        data: monthlyData.data,
+                        backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Tekanan darah chart
+            const tekananDarahCtx = document.getElementById('tekananDarahChart').getContext('2d');
+            const tekananDarahData = getTekananDarahDistribution(data);
+            
+            const tekananDarahChart = new Chart(tekananDarahCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Normal', 'Pra-Hipertensi', 'Hipertensi', 'Hipotensi', 'Tidak Tercatat'],
+                    datasets: [{
+                        data: [
+                            tekananDarahData.normal,
+                            tekananDarahData.prehypertension,
+                            tekananDarahData.hypertension,
+                            tekananDarahData.hypotension,
+                            tekananDarahData.unrecorded
+                        ],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.6)',
+                            'rgba(234, 179, 8, 0.6)',
+                            'rgba(239, 68, 68, 0.6)',
+                            'rgba(59, 130, 246, 0.6)',
+                            'rgba(107, 114, 128, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(234, 179, 8, 1)',
+                            'rgba(239, 68, 68, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(107, 114, 128, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+        
+        // Helper functions for charts
+        function getMonthlyCount(data) {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            const currentYear = new Date().getFullYear();
+            
+            const monthlyCounts = Array(12).fill(0);
+            
+            data.forEach(item => {
+                const date = new Date(item.timestamp);
+                if (date.getFullYear() === currentYear) {
+                    monthlyCounts[date.getMonth()]++;
+                }
+            });
+            
+            return {
+                labels: months,
+                data: monthlyCounts
+            };
+        }
+        
+        function getImunisasiStats(data) {
+            let completed = 0;
+            let incomplete = 0;
+            
+            data.forEach(item => {
+                if (item.imunisasi && item.imunisasi.length > 0) {
+                    completed++;
+                } else {
+                    incomplete++;
+                }
+            });
+            
+            return {
+                completed: completed,
+                incomplete: incomplete
+            };
+        }
+        
+        function getGrowthTrend(data) {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            const currentYear = new Date().getFullYear();
+            
+            const weightData = Array(12).fill(0);
+            const heightData = Array(12).fill(0);
+            const countsPerMonth = Array(12).fill(0);
+            
+            data.forEach(item => {
+                const date = new Date(item.timestamp);
+                if (date.getFullYear() === currentYear) {
+                    const month = date.getMonth();
+                    
+                    if (item.beratBadan) {
+                        weightData[month] += parseFloat(item.beratBadan);
+                        countsPerMonth[month]++;
+                    }
+                    
+                    if (item.tinggiBadan) {
+                        heightData[month] += parseFloat(item.tinggiBadan);
+                    }
+                }
+            });
+            
+            // Calculate averages
+            for (let i = 0; i < 12; i++) {
+                if (countsPerMonth[i] > 0) {
+                    weightData[i] = parseFloat((weightData[i] / countsPerMonth[i]).toFixed(1));
+                    heightData[i] = parseFloat((heightData[i] / countsPerMonth[i]).toFixed(1));
+                } else {
+                    weightData[i] = null;
+                    heightData[i] = null;
+                }
+            }
+            
+            return {
+                labels: months,
+                weight: weightData,
+                height: heightData
+            };
+        }
+        
+        function getUsiaKehamilanDistribution(data) {
+            let trimester1 = 0;
+            let trimester2 = 0;
+            let trimester3 = 0;
+            
+            data.forEach(item => {
+                if (item.usiaKehamilan) {
+                    const usia = parseInt(item.usiaKehamilan);
+                    if (usia <= 12) {
+                        trimester1++;
+                    } else if (usia <= 27) {
+                        trimester2++;
+                    } else {
+                        trimester3++;
+                    }
+                }
+            });
+            
+            return {
+                trimester1: trimester1,
+                trimester2: trimester2,
+                trimester3: trimester3
+            };
+        }
+        
+        function getTekananDarahDistribution(data) {
+            let normal = 0;
+            let prehypertension = 0;
+            let hypertension = 0;
+            let hypotension = 0;
+            let unrecorded = 0;
+            
+            data.forEach(item => {
+                if (!item.tekananDarah || item.tekananDarah === '') {
+                    unrecorded++;
+                } else {
+                    const parts = item.tekananDarah.split('/');
+                    if (parts.length === 2) {
+                        const systolic = parseInt(parts[0]);
+                        const diastolic = parseInt(parts[1]);
+                        
+                        if (isNaN(systolic) || isNaN(diastolic)) {
+                            unrecorded++;
+                        } else if (systolic < 90 || diastolic < 60) {
+                            hypotension++;
+                        } else if (systolic >= 140 || diastolic >= 90) {
+                            hypertension++;
+                        } else if ((systolic >= 120 && systolic < 140) || (diastolic >= 80 && diastolic < 90)) {
+                            prehypertension++;
+                        } else {
+                            normal++;
+                        }
+                    } else {
+                        unrecorded++;
+                    }
+                }
+            });
+            
+            return {
+                normal: normal,
+                prehypertension: prehypertension,
+                hypertension: hypertension,
+                hypotension: hypotension,
+                unrecorded: unrecorded
+            };
+        }
     </script>
 </body>
 </html>
